@@ -17,3 +17,10 @@ import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 
+WebUI.callTestCase(findTestCase('Login/Login_Success'), [:], FailureHandling.STOP_ON_FAILURE)
+
+WebUI.click(findTestObject('Object Repository/Page_STORE/a_Log out'))
+
+// Verifikasi apakah logout berhasil dengan mengecek wording logout telah berubah ke login
+WebUI.verifyElementPresent(findTestObject('Page_STORE/a_Log in'), 10)
+
