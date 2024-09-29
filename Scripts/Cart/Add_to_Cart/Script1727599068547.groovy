@@ -16,31 +16,29 @@ import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
-import org.apache.commons.lang.RandomStringUtils as RandomStringUtils
 
-WebUI.openBrowser('')
+// Memanggil Test Cases Login
+WebUI.callTestCase(findTestCase('Login/Login_Success'), [:], FailureHandling.STOP_ON_FAILURE)
 
-// Membuka website
-WebUI.navigateToUrl('https://www.demoblaze.com/index.html')
+// Mengambil string nama produk di katalog, untuk cek identitas di katalog dan detail sama
+String productNameCatalog = WebUI.getText(findTestObject('Object Repository/Page_STORE/a_Samsung galaxy s6'))
 
-// Klik button Sign up pada navigation bar
-WebUI.click(findTestObject('Object Repository/Page_STORE/a_Sign up'))
+// Klik produk
+WebUI.click(findTestObject('Object Repository/Page_STORE/a_Samsung galaxy s6'))
 
-// Menginputkan Username. Catatan: digunakan string acak agar dapat dijalankan berkali-kali.
-String UsernameRandom = RandomStringUtils.randomAlphanumeric(8)
-WebUI.setText(findTestObject('Object Repository/Page_STORE/input_Username_sign-username'), UsernameRandom)
-String storedRandomString = UsernameRandom
-
-println("Username: " + UsernameRandom)
-
-// Menginputkan Password. Catatan : mmenggunakan password yang sama yaitu "testing1"
-WebUI.setEncryptedText(findTestObject('Object Repository/Page_STORE/input_Password_sign-password'), 'fzqqY0qJjYRVrxTAfQ5f7A==')
+// Mengambil string nama produk di detail, untuk cek identitas di katalog dan detail sama
+String productNameDetail = WebUI.getText(findTestObject('Object Repository/Page_STORE/h2_Samsung galaxy s6'))
+if (productNameCatalog.equals(productNameDetail)) {
+	println("Nama Produk di Katalog dan Detail Sama.")
+} else {
+	println("Nama Produk di Katalog dan Detail Tidak Sama.")
+}
 
 // Menambahkan jeda 3 detik
-WebUI.delay(3)
+WebUI.delay(1)
 
-// Klik button Sign up, ini akan memicu alert
-WebUI.click(findTestObject('Object Repository/Page_STORE/button_Sign up'))
+// Klik button Add to Cart untuk menambah produk ke keranjang
+WebUI.click(findTestObject('Object Repository/Page_STORE/a_Add to cart'))
 
 // Tunggu hingga alert muncul kemuidan mencetak pesan alert
 if (WebUI.waitForAlert(3)) {
@@ -49,4 +47,8 @@ if (WebUI.waitForAlert(3)) {
 	WebUI.acceptAlert()
 }
 
+// Klik menu Cart pada navigation bar
+WebUI.click(findTestObject('Object Repository/Page_STORE/a_Cart'))
 
+// Verifikasi produk yang ditambahkan ada di keranjang
+WebUI.verifyElementPresent(findTestObject('Object Repository/Page_STORE/td_Samsung galaxy s6'), 60)
